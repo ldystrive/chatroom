@@ -10,9 +10,6 @@ class Server:
         self.addr_dict = {'group': '0'}
         self.ban_list = ['group', 'failed']
         self.con_dict = {}
-        #self.con = threading.Condition()
-        #self.client_conns = []
-        # noinspection PyBroadException
         try:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         except:
@@ -83,12 +80,12 @@ class Server:
         if name_b not in self.addr_dict.keys():
             pass
         if name_b.lower() == 'group':
-            msg = 'CHAT|' + name_a + '|' + name_a + '|' + msg
+            msg = 'CHAT|' + 'group' + '|' + name_a + '|' + msg
             for name in self.conn_dict.keys():
                 if name != name_a:
                     self.send(name, msg)
         else:
-            msg = 'CHAT|' + 'group' + '|' + name_a + '|' + msg
+            msg = 'CHAT|' + name_a + '|' + name_a + '|' + msg
             self.send(name_b, msg)
 
     def handler(self, data, conn, addr):
