@@ -3,6 +3,7 @@ import socket
 import threading
 import time
 
+
 class Client:
     def __init__(self, addr):
         self.name = ''
@@ -12,10 +13,12 @@ class Client:
         self.con = threading.Condition()
 
     def login(self, name):
+        print('login', name)
         self.name = name
         self.conn.sendall(('LOGIN|' + name).encode('utf-8'))
         try:
             data = self.conn.recv(1024).decode('utf-8')
+            print('login', data)
             if data == 'OK':
                 return True
             else:
@@ -61,11 +64,9 @@ class Client:
             print(self.name_list)
 
 
-addr = ('127.0.0.1', 2333)
-client = Client(addr)
-
-
 if __name__ == '__main__':
+    addr = ('127.0.0.1', 2333)
+    client = Client(addr)
     name = input('please input your name:')
     if client.login(name):
         threading.Thread(target=client.listen).start()
