@@ -15,8 +15,8 @@ class Client:
     def login(self, name):
         print('login', name)
         self.name = name
-        self.conn.sendall(('LOGIN|' + name).encode('utf-8'))
         try:
+            self.conn.sendall(('LOGIN|' + name).encode('utf-8'))
             data = self.conn.recv(1024).decode('utf-8')
             print('login', data)
             if data == 'OK':
@@ -37,7 +37,7 @@ class Client:
                 self.conn.sendall(msg.encode('utf-8'))
                 self.con.release()
             except:
-                print('Send msg to ' + name + ' failed.')
+                print('Send msg to server failed.')
                 self.con.release()
 
     def chat(self, name, msg):
