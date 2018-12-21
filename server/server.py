@@ -105,7 +105,8 @@ class Server:
                 data = conn.recv(1024).decode('utf-8')
                 if not data:
                     return
-                threading.Thread(target=self.handler, args=(data, conn, addr)).start()
+                threading.Thread(target=self.handler,
+                                 args=(data, conn, addr)).start()
             except:
                 print('a connection break.')
 
@@ -114,14 +115,12 @@ class Server:
             conn, addr = self.socket.accept()
             print('Connected with ' + addr[0] + ':' + str(addr[1]))
             data = conn.recv(1024).decode('utf-8')
-            threading.Thread(target=self.handler, args=(data, conn, addr)).start()
-            threading.Thread(target=self.keep_conn, args=(conn,addr)).start()
-
-
-addr = ('127.0.0.1', 2333)
-server = Server(addr)
+            threading.Thread(target=self.handler,
+                             args=(data, conn, addr)).start()
+            threading.Thread(target=self.keep_conn, args=(conn, addr)).start()
 
 
 if __name__ == '__main__':
+    addr = ('0.0.0.0', 2333)
+    server = Server(addr)
     server.listen()
-

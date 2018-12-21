@@ -14,6 +14,17 @@
   <link rel="stylesheet" href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css" />
   <!-- Include eel.js - note this file doesn't exist in the 'web' directory -->
   <script type="text/javascript" src="/eel.js"></script>
+  <style>
+    .notify {
+      position: absolute;
+      top: 50;
+      right: 0;
+    }
+    .el-badge__content.is-fixed.is-dot{
+      left: -8px;
+      top: 8px;
+    }
+  </style>
 </head>
 
 <body>
@@ -29,12 +40,14 @@
     <div v-else>
       <div class="vh-100 flex flex-auto">
         <div class="relative w-30 h-100 shadow-5">
-          <div class="h3 flex bg-navy items-center">
-            <span class="pl2 tracked white fw4 f4 db ">👋, {{username}}</span>
+          <div class="h3 flex bg-navy items-center z-0">
+            <span class="pl2 tracked white fw4 f4 db ">Hello, {{username}}</span>
           </div>
           <div class="relative overflow-y-scroll" style="height: calc(100vh - 4rem);">
-            <div class="bb b--light-gray pointer" v-for="name in nameList" :key="name" @click="changeChat(name)">
-              <span class="dib ph2 pv3">{{name}}</span>
+            <div v-for="name in nameList" :key="name" @click="changeChat(name)" :class="['bb b--light-gray pointer', name === currentChat ? 'bg-light-gray o-75' : '']">
+              <el-badge is-dot :hidden="isRead[name]">
+                <div class="ph2 pv3">{{name}}</div>
+              </el-badge>
             </div>
           </div>
         </div>
@@ -43,11 +56,11 @@
             <span class="dib f4 fw6 pl3 pv2 sans-serif">{{currentChat}}</span>
           </div>
           <div class="relative" style="height: calc(100vh - 3rem);">
-            <div>
+            <div style="height: calc(100vh - 6rem);" class="overflow-y-scroll" id="chatarea">
               <div v-for="(msgObj, index) in history[currentChat]" key="index">
                 <div :class="['pa2', msgObj.name === username ? 'tr' : 'tl']">
-                  <div class="f7 dark-gray">{{msgObj.name}}</div>
-                  <div class="f5 near-black">{{msgObj.msg}}</div>
+                  <div class="f6 dark-gray pa1">{{msgObj.name}}</div>
+                  <div class="f5 near-black pa1">{{msgObj.msg}}</div>
                 </div>
               </div>
             </div>
@@ -77,7 +90,11 @@
       willSendMessage: '',
       nameList: [],
       currentChat: '',
-      history: {}
+      history: {},
+      isRead: {}
+    },
+    updated() {
+      this.scrollToBottom()
     },
     methods: {
       login() {
@@ -103,16 +120,46 @@
       recvMsg({ roomName, name, msg }) {
         if (!this.history.hasOwnProperty(roomName)) {
           this.$set(this.history, roomName, [{ name, msg }])
+          this.$set(this.isRead, roomName, true)
         } else {
           this.history[roomName].push({ name, msg })
+        }
+        if (name !== this.username) {
+          // console.log({ roomName, name, msg })
+          this.notifyMessage({ roomName, name, msg })
+          if (this.currentChat !== roomName) {
+            this.isRead[roomName] = false
+          }
         }
       },
       updateNameList(info) {
         this.nameList = info
+        this.nameList.map(name => {
+          if (!this.isRead.hasOwnProperty(name)) {
+            this.$set(this.isRead, name, true)
+          }
+        })
       },
       changeChat(name) {
         this.currentChat = name
-        console.log('currentChat', name)
+        this.isRead[name] = true
+        // console.log('currentChat', name)
+      },
+      notifyMessage({ roomName, name, msg }) {
+        this.$notify({
+          title: `${name} ${roomName === 'group' ? 'in group' : ''}`,
+          message: msg,
+          customClass: 'notify',
+          duration: 1500
+        })
+      },
+      scrollToBottom() {
+        this.$nextTick(function () {
+          let div = document.getElementById('chatarea')
+          if (div) {
+            div.scrollTop = div.scrollHeight
+          }
+        })
       }
     }
   })
