@@ -14,7 +14,6 @@ class Client:
         self.con = threading.Condition()
 
     def login(self, name):
-        print('login', name)
         self.name = name
         self.conn.sendall(('LOGIN|' + name).encode('utf-8'))
         try:
@@ -63,7 +62,7 @@ class Client:
         if args[0] == 'UPDATE':
             self.name_list = [w for w in args[1:] if w != self.name]
             eel.updateNameList(self.name_list)
-            print(self.name_list)
+            print('name_list', self.name_list)
 
 
 addr = ('127.0.0.1', 2333)
@@ -81,8 +80,10 @@ def handleinput(x):
 def handleLogin(x):
     if (client.name == x):
         eel.setLogin(True)
+        print('login', x)
         return
     isLogin = client.login(x)
+    print('login', x, isLogin)
     eel.setLogin(isLogin)
     if (isLogin):
         main()
