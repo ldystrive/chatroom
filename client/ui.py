@@ -65,7 +65,8 @@ class Client:
             print('name_list', self.name_list)
 
 
-addr = ('127.0.0.1', 2333)
+addr = ('45.77.167.215', 2333)
+# addr = ('127.0.0.1', 2333)
 client = Client(addr)
 
 eel.init('web')                     # Give folder containing web files
@@ -78,10 +79,6 @@ def handleinput(x):
 
 @eel.expose
 def handleLogin(x):
-    if (client.name == x):
-        eel.setLogin(True)
-        print('login', x)
-        return
     isLogin = client.login(x)
     print('login', x, isLogin)
     eel.setLogin(isLogin)
