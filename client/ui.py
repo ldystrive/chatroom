@@ -65,8 +65,8 @@ class Client:
             print('name_list', self.name_list)
 
 
-addr = ('45.77.167.215', 2333)
-# addr = ('127.0.0.1', 2333)
+# addr = ('45.77.167.215', 2333)
+addr = ('127.0.0.1', 2333)
 client = Client(addr)
 
 eel.init('web')                     # Give folder containing web files

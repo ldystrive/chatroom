@@ -13,7 +13,10 @@
 ```shell
 // 启动服务端
 python3 /server/server.py
-// pip install eel 如果安装失败，请升级pip和setuptools
+// pip3 install eel 
+// 如果安装失败，请先升级pip和setuptools
+// python3 -m pip install --upgrade pip
+// pip3 install --upgrade setuptools
 // 启动客户端
 python3 /client/ui.py
 ```
