@@ -10,6 +10,14 @@
 
 前端：python eel + vue.js
 
+```shell
+// 启动服务端
+python3 /server/server.py
+// pip install eel 如果安装失败，请升级pip和setuptools
+// 启动客户端
+python3 /client/ui.py
+```
+
 ## 三. 协议设计
 
 #### Client:
